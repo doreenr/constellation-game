@@ -1,55 +1,50 @@
 class Star {
   float x;
   float y;
-  float speedx;
-  float speedy;
   float r;
   boolean selected;
-  boolean frozen;
+  int index;
   
-Star(float x, float y, float speedx, float speedy, float r) {
-  this.x=x;
-  this.y=y;
-  this.speedx = speedx;
-  this.speedy = speedy;
-  this.r = r;
-  this.selected = false;
-  this.frozen = false;
-}
-
-void update() {
-  if (frozen) return;
-  x+= speedx;
-  y+= speedy;
-  
-  if(x<0) x = width;
-  if(x>width) x=0;
-  if(y<0) y = height;
-  if(y>height) y=0;
-}
-
-void display() {
-  noStroke();
-  
-  if(selected) {
-    fill(255);
-    ellipse(x,y, r*4, r*4);
-  } else {
-    fill (255);
-    ellipse(x,y, 4, 4);
+  Star(float x, float y, float r, int index) {
+    this.x = x;
+    this.y = y;
+    this.r = r;
+    this.selected = false;
+    this.index = index;
   }
-}
-
-boolean isMouseOver(float mx, float my) {
-  return dist(mx, my, x,y) <=r;
-}
-
-void onClick() {
-  selected = true;
-  frozen = true;
-}
-void unselect() {
-  selected = false;
-  frozen= false;
-}
+  
+  void display(float ox, float oy) {
+    float sx = x - ox;
+    float sy = y - oy;
+    
+    if (sx >= -20 && sx <= width + 20 && sy >= -20 && sy <= height + 20) {
+      noStroke();
+      fill(255);
+      if (selected) {
+        ellipse(sx, sy, r * 3, r * 3);
+      } else {
+        ellipse(sx, sy, r, r);
+      }
+    }
+  }
+  
+  boolean isMouseOver(float mx, float my, float ox, float oy) {
+    float sx = x - ox;
+    float sy = y - oy;
+    return dist(mx, my, sx, sy) <= max(r * 2, 15);
+  }
+  
+  boolean isVisible(float ox, float oy) {
+    float sx = x - ox;
+    float sy = y - oy;
+    return sx >= -20 && sx <= width + 20 && sy >= -20 && sy <= height + 20;
+  }
+  
+  void select() {
+    selected = true;
+  }
+  
+  void unselect() {
+    selected = false;
+  }
 }
