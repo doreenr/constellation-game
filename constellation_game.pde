@@ -48,8 +48,12 @@ void draw() {
 }
 
 void play() {
-  offsetX += speed;
-  offsetY += speed * 0.3;
+  float p = game.timer.progress();          // 0..1 over the whole game
+  float eased = p * p * (3 - 2 * p);        // smoothstep
+  float currentSpeed = lerp(0.2, 1, eased);  // start 0, end 0.8 (tune end value)
+
+  offsetX += currentSpeed;
+  offsetY += currentSpeed * 0.3;
   
   if (selected.size() > 0) {
     for (Star s : selected) {
